@@ -22,7 +22,7 @@ process <- function(x, name) {
     gsub("\\/", "_", tolower(x))
 
   x %>%
-    filter(countyFIPS >= 1000) %>%
+    # filter(countyFIPS >= 1000) %>%
     tidyr::pivot_longer(
       cols = ends_with("20"),
       names_to = "date",
@@ -40,20 +40,29 @@ process <- function(x, name) {
 dc2 <- process(dc, "cases")
 dd2 <- process(dd, "deaths")
 
-county <- left_join(dc2, dd2, by = c("admin0_code", "admin1_code",
-  "admin2_code", "date")) %>%
-  group_by(admin2_code) %>%
+tmp <- left_join(dc2, dd2, by = c("admin0_code", "admin1_code",
+  "admin2_code", "date"))
+
+state <- tmp %>%
+  group_by(admin0_code, admin1_code, date) %>%
+  summarise(
+    cases = sum(cases, na.rm = TRUE),
+    deaths = sum(deaths, na.rm = TRUE)) %>%
+  group_by(admin1_code) %>%
   mutate(all_zero = all(cases == 0)) %>%
   filter(!all_zero) %>%
   mutate(min_zero_date = min(date[cases > 0])) %>%
   filter(date >= min_zero_date) %>%
   dplyr::select(-all_zero, -min_zero_date)
 
-state <- county %>%
-  group_by(admin0_code, admin1_code, date) %>%
-  summarise(
-    cases = sum(cases, na.rm = TRUE),
-    deaths = sum(deaths, na.rm = TRUE))
+county <- tmp %>%
+  filter(substr(admin2_code, 1, 2) != "00") %>%
+  group_by(admin2_code) %>%
+  mutate(all_zero = all(cases == 0)) %>%
+  filter(!all_zero) %>%
+  mutate(min_zero_date = min(date[cases > 0])) %>%
+  filter(date >= min_zero_date) %>%
+  dplyr::select(-all_zero, -min_zero_date)
 
 readr::write_csv(county, "output/admin2_US.csv")
 readr::write_csv(state, "output/admin1_US.csv")
