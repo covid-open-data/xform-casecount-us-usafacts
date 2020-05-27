@@ -1,0 +1,23 @@
+#on:
+#  schedule:
+#  - cron: "*/5 * * * *"
+
+# For testing, use the star action in GitHub to trigger the action.
+# TODO: Remove this after testing.
+on:
+  watch:
+    types: [started]
+
+jobs:
+  run-xform:
+    runs-on: ubuntu-latest
+    name: Run Transformer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Xform
+        uses: ./.github/actions/run-xform
+        with:
+          xform-command: '${GITHUB_WORKSPACE}/src/xform.sh'
+      - name: Git Push
+        uses: ./.github/actions/git-push

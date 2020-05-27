@@ -1,5 +1,10 @@
 suppressPackageStartupMessages(library(tidyverse))
 
+dir.create("output", showWarning = FALSE)
+dir.create("output/admin0", showWarning = FALSE)
+dir.create("output/admin1", showWarning = FALSE)
+dir.create("output/admin2", showWarning = FALSE)
+
 urls <- list(
   cases = "https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv",
   deaths = "https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_deaths_usafacts.csv"
@@ -64,5 +69,13 @@ county <- tmp %>%
   filter(date >= min_zero_date) %>%
   dplyr::select(-all_zero, -min_zero_date)
 
-readr::write_csv(county, "output/admin2_US.csv")
-readr::write_csv(state, "output/admin1_US.csv")
+
+country <- tmp %>%
+  group_by(date) %>%
+  summarise(
+    cases = sum(cases, na.rm = TRUE),
+    deaths = sum(deaths, na.rm = TRUE))
+
+readr::write_csv(county, "output/admin2/US.csv")
+readr::write_csv(state, "output/admin1/US.csv")
+readr::write_csv(country, "output/admin0/US.csv")
