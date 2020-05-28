@@ -38,41 +38,42 @@ process <- function(x, name) {
       admin0_code = "US",
       admin2_code = sprintf("%05d", countyfips),
       admin1_code = sprintf("%02d", statefips)) %>%
-      select(one_of(
-        c("admin0_code", "admin1_code", "admin2_code", "date", name)))
+    dplyr::select(dplyr::one_of(
+      c("admin0_code", "admin1_code", "admin2_code", "date", name)))
 }
 
 dc2 <- process(dc, "cases")
 dd2 <- process(dd, "deaths")
 
-tmp <- left_join(dc2, dd2, by = c("admin0_code", "admin1_code",
+message("Most recent date: ", max(dc2$date))
+
+tmp <- dplyr::left_join(dc2, dd2, by = c("admin0_code", "admin1_code",
   "admin2_code", "date"))
 
 state <- tmp %>%
-  group_by(admin0_code, admin1_code, date) %>%
-  summarise(
+  dplyr::group_by(admin0_code, admin1_code, date) %>%
+  dplyr::summarise(
     cases = sum(cases, na.rm = TRUE),
     deaths = sum(deaths, na.rm = TRUE)) %>%
-  group_by(admin1_code) %>%
-  mutate(all_zero = all(cases == 0)) %>%
-  filter(!all_zero) %>%
-  mutate(min_zero_date = min(date[cases > 0])) %>%
-  filter(date >= min_zero_date) %>%
+  dplyr::group_by(admin1_code) %>%
+  dplyr::mutate(all_zero = all(cases == 0)) %>%
+  dplyr::filter(!all_zero) %>%
+  dplyr::mutate(min_zero_date = min(date[cases > 0])) %>%
+  dplyr::filter(date >= min_zero_date) %>%
   dplyr::select(-all_zero, -min_zero_date)
 
 county <- tmp %>%
-  filter(substr(admin2_code, 1, 2) != "00") %>%
-  group_by(admin2_code) %>%
-  mutate(all_zero = all(cases == 0)) %>%
-  filter(!all_zero) %>%
-  mutate(min_zero_date = min(date[cases > 0])) %>%
-  filter(date >= min_zero_date) %>%
+  dplyr::filter(substr(admin2_code, 1, 2) != "00") %>%
+  dplyr::group_by(admin2_code) %>%
+  dplyr::mutate(all_zero = all(cases == 0)) %>%
+  dplyr::filter(!all_zero) %>%
+  dplyr::mutate(min_zero_date = min(date[cases > 0])) %>%
+  dplyr::filter(date >= min_zero_date) %>%
   dplyr::select(-all_zero, -min_zero_date)
 
-
 country <- tmp %>%
-  group_by(date) %>%
-  summarise(
+  dplyr::group_by(admin0_code, date) %>%
+  dplyr::summarise(
     cases = sum(cases, na.rm = TRUE),
     deaths = sum(deaths, na.rm = TRUE))
 
