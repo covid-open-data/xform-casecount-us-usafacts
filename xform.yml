@@ -1,0 +1,30 @@
+# Name of the organization that publishes the data source
+source_organization: USA FACTS
+# Web address of the data source
+source_url: https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/
+# Web address pointing to any indication of a terms of use for the data
+terms_of_use: https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/
+# Creative Commons
+
+# List of all output files
+# Note that source_organization, source_url, and terms_of_use can be overridden
+#   for each output by providing those fields in the output entries.
+outputs:
+  -
+    description: Daily cumulative case and death counts for all affected US counties.
+    type: casecounts
+    file: output/admin2/US.csv
+    admin_level: 2
+    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/case-counts-schemas/schemas/case-counts/admin2/v1/admin2.json
+  -
+    description: Daily cumulative case and death counts for all US states.
+    type: casecounts
+    file: output/admin1/US.csv
+    admin_level: 1
+    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/case-counts-schemas/schemas/case-counts/admin1/v1/admin1.json
+  -
+    description: Daily cumulative case and death counts for the entire US.
+    type: casecounts
+    file: output/admin0/US.csv
+    admin_level: 0
+    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/case-counts-schemas/schemas/case-counts/admin0/v1/admin0.json

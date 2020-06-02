@@ -1,12 +1,9 @@
-#on:
-#  schedule:
-#  - cron: "*/5 * * * *"
-
-# For testing, use the star action in GitHub to trigger the action.
-# TODO: Remove this after testing.
+# Run every day at 9pm Pacific
 on:
   watch:
     types: [started]
+  schedule:
+    - cron: "* 4 * * *"
 
 jobs:
   run-xform:
