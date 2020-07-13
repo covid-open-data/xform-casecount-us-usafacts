@@ -1,9 +1,9 @@
-# Run every day at 9pm Pacific
+# Run every day at 2am Pacific
 on:
-  watch:
-    types: [started]
+  # watch:
+  #   types: [started]
   schedule:
-    - cron: "* 4 * * *"
+    - cron: "* 9 * * *"
 
 jobs:
   run-xform:
