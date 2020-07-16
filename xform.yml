@@ -12,19 +12,19 @@ terms_of_use: https://usafacts.org/visualizations/coronavirus-covid-19-spread-ma
 outputs:
   -
     description: Daily cumulative case and death counts for all affected US counties.
-    type: casecounts
+    type: case-counts
     file: output/admin2/US.csv
     admin_level: 2
-    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/case-counts-schemas/schemas/case-counts/admin2/v1/admin2.json
+    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/master/schemas/case-counts/admin2/v1/admin2.json
   -
     description: Daily cumulative case and death counts for all US states.
-    type: casecounts
+    type: case-counts
     file: output/admin1/US.csv
     admin_level: 1
-    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/case-counts-schemas/schemas/case-counts/admin1/v1/admin1.json
+    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/master/schemas/case-counts/admin1/v1/admin1.json
   -
     description: Daily cumulative case and death counts for the entire US.
-    type: casecounts
+    type: case-counts
     file: output/admin0/US.csv
     admin_level: 0
-    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/case-counts-schemas/schemas/case-counts/admin0/v1/admin0.json
+    schema: https://raw.githubusercontent.com/covid-open-data/data-registry/master/schemas/case-counts/admin0/v1/admin0.json
