@@ -3,5 +3,7 @@
 # Install base container dependencies.
 ###############################################################################
 source "${GITHUB_WORKSPACE}/.github/scripts/shutils.sh"
-git --version
+python --version
+pip --version
+csv-schema --version
 exit $?

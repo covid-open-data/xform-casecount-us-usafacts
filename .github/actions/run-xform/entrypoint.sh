@@ -2,37 +2,25 @@
 ###############################################################################
 # Docker container entrypoint script.
 ###############################################################################
-
-XFORM_COMMAND=$@
-
-if [ -z "${GITHUB_WORKSPACE}" ]; then
-  echo "GITHUB_WORKSPACE not set, aborting."
-  exit 1
-fi
+export ACTION_DIR="${GITHUB_WORKSPACE}/.github/actions/run-xform"
+source "${GITHUB_WORKSPACE}/.github/scripts/shutils.sh"
+export XFORM_COMMAND=$@
 
 if [ -z "${XFORM_COMMAND}" ]; then
   echo "xform-command not provided, aborting."
   exit 1
 fi
 
-cd "${GITHUB_WORKSPACE}"
-
-.github/actions/run-xform/install.sh
-INSTALL_STATUS=$?
-
-if [ ${INSTALL_STATUS} -ne 0 ]; then
-  echo "Install failed."
-  exit 1
-fi
+source "${GITHUB_WORKSPACE}/.github/scripts/container.sh"
 
 echo "Executing: ${XFORM_COMMAND}"
 eval ${XFORM_COMMAND}
-XFORM_STATUS=$?
+ACTION_STATUS=$?
 
-if [ ${XFORM_STATUS} -eq 0 ]; then
+if [ ${ACTION_STATUS} -eq 0 ]; then
   echo "Success."
 else
   echo "Fail."
 fi
 
-exit ${XFORM_STATUS}
+exit ${ACTION_STATUS}

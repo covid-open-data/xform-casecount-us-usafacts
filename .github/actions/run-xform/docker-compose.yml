@@ -1,6 +1,6 @@
 version: '2'
 services:
-  xform_runner:
+  runner:
     build: .
     command: '$${GITHUB_WORKSPACE}/src/xform.sh'
     environment:
