@@ -13,14 +13,6 @@ urls <- list(
 dc <- suppressMessages(readr::read_csv(urls$cases))
 dd <- suppressMessages(readr::read_csv(urls$deaths))
 
-# need custom parser for date format
-fix_date <- function(dt) {
-  as.Date(sapply(strsplit(dt, "/"), function(x) {
-    x[3] <- paste0("20", x[3])
-    paste(sprintf("%02d", as.integer(x[c(3, 1, 2)])), collapse = "-")
-  }))
-}
-
 # pivot from wide to long, fix date and names
 process <- function(x, name) {
   rnm <- function(x)
@@ -29,15 +21,15 @@ process <- function(x, name) {
   x %>%
     # filter(countyFIPS >= 1000) %>%
     tidyr::pivot_longer(
-      cols = ends_with("20"),
+      cols = starts_with(c("2020", "2021")),
       names_to = "date",
       values_to = name) %>%
     dplyr::rename_all(rnm) %>%
     dplyr::mutate(
-      date = fix_date(date),
+      date = as.Date(date),
       admin0_code = "US",
       admin2_code = sprintf("%05d", countyfips),
-      admin1_code = sprintf("%02d", statefips)) %>%
+      admin1_code = statefips) %>%
     dplyr::select(dplyr::one_of(
       c("admin0_code", "admin1_code", "admin2_code", "date", name)))
 }
