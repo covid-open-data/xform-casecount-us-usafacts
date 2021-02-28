@@ -69,6 +69,13 @@ country <- tmp %>%
     cases = sum(cases, na.rm = TRUE),
     deaths = sum(deaths, na.rm = TRUE))
 
+country$cases[country$cases < 0] <- 0
+country$deaths[country$deaths < 0] <- 0
+state$cases[state$cases < 0] <- 0
+state$deaths[state$deaths < 0] <- 0
+county$cases[county$cases < 0] <- 0
+county$deaths[county$deaths < 0] <- 0
+
 readr::write_csv(county, "output/admin2/US.csv")
 readr::write_csv(state, "output/admin1/US.csv")
 readr::write_csv(country, "output/admin0/US.csv")
